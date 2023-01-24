@@ -52,7 +52,7 @@ let appData = {
 	income: [],
 	savings: true,
 	chooseExpenses: function() { /*запрашиваем у пользователя 2 статьи обязательных расходов */
-		for (let i = 0; i < 2; i++) {
+		for (let i = 0; i < 3; i++) {
 			let a = prompt ("Введите обязательную статью расходов в этом месяце", ''),
 			b = +prompt ("Во сколько обойдется?", '');
 		
@@ -66,6 +66,23 @@ let appData = {
 			}
 		}
 	},
+
+	chooseOptExpenses: function() { /*запрашиваем у пользователя 2 статьи необязательных расходов */
+		for (let i = 0; i < 2; i++) {
+			let c = prompt ("Введите необязательную статью расходов в этом месяце", ''),
+			d = +prompt ("Во сколько обойдется?", '');
+		
+			if (typeof(c) === 'string' && typeof(c) != null && c != '' 
+			&& typeof(d) != null && d != '' && c.length < 50) {
+				console.log ("done");
+				appData.optionalExpenses[c] = d; //добавить новое значение в объект
+			} else {
+				console.log ("bad result");
+				i--;
+			}
+		}
+	},
+
 	detectDayBudget: function() { /*расчет бюджета на 1 день */
 		appData.moneyPerDay = (appData.budget / 30).toFixed();
 		alert(`Ваш бюджет на 1 день: ${appData.moneyPerDay}`);
@@ -92,21 +109,7 @@ let appData = {
 			alert("Доход в месяц с вашего депозита: " + appData.monthIncome);
 		}
 	},
-	chooseOptExpenses: function() { /*запрашиваем у пользователя 2 статьи необязательных расходов */
-		for (let i = 0; i < 3; i++) {
-			let c = prompt ("Введите необязательную статью расходов в этом месяце", ''),
-			d = +prompt ("Во сколько обойдется?", '');
-		
-			if (typeof(c) === 'string' && typeof(c) != null && c != '' 
-			&& typeof(d) != null && d != '' && c.length < 50) {
-				console.log ("done");
-				appData.optionalExpenses[c] = d; //добавить новое значение в объект
-			} else {
-				console.log ("bad result");
-				i--;
-			}
-		}
-	},
+	
 	chooseIncome: function() {
 			let items = prompt('Что принесет дополнительный доход? (Перечислите через запятую)', '');
 		

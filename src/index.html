@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Расчет Бюджета</title>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&amp;subset=cyrillic" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.min.css">
 </head>
 <body>
 <div class="app">
@@ -15,28 +15,29 @@
         keeper
     </div>
     <div class="title">
-        Расчет дневного бюджета
+        Расчет бюджета на 1 месяц
     </div>
     <div class="main">
         <div class="data">
+            <button class="start" id="start">начать</button>
             <div class="choose-expenses">Введите обязательные расходы</div>
-            <input class="expenses-item" type="text" id="expenses_1" placeholder="Наименование">
-			<input class="expenses-item" type="text" id="expenses_2" placeholder="Цена">
-			<input class="expenses-item" type="text" id="expenses_3" placeholder="Наименование">
-			<input class="expenses-item" type="text" id="expenses_4" placeholder="Цена">
-            <button class="expenses-item-btn">Утвердить</button>
+            <input class="expenses-item" type="text" id="expenses_1" placeholder="статья">
+			<input class="expenses-item" type="text" id="expenses_2" placeholder="сумма">
+			<input class="expenses-item" type="text" id="expenses_3" placeholder="статья">
+			<input class="expenses-item" type="text" id="expenses_4" placeholder="сумма">
+            <input class="expenses-item" type="text" id="expenses_5" placeholder="статья">
+			<input class="expenses-item" type="text" id="expenses_6" placeholder="сумма">
+            <!--<button class="expenses-item-btn">Утвердить</button>-->
             
             <div class="optionalexpenses">Введите необязательные расходы</div>
-			<input class="optionalexpenses-item" type="text" id="optionalexpenses_1">
-			<input class="optionalexpenses-item" type="text" id="optionalexpenses_2">
-			<input class="optionalexpenses-item" type="text" id="optionalexpenses_3">
+			<input class="optionalexpenses-item" type="text" id="optionalexpenses_1" placeholder="статья">
+			<input class="optionalexpenses-item" type="text" id="optionalexpenses_2" placeholder="сумма">
+			<input class="optionalexpenses-item" type="text" id="optionalexpenses_3" placeholder="статья">
+            <input class="optionalexpenses-item" type="text" id="optionalexpenses_4" placeholder="сумма">
             <button class="optionalexpenses-btn">Утвердить</button>
             
-            <div class="count-budget">Расчет дневного бюджета</div>
-            <button class="count-budget-btn">Рассчитать</button>
-            
-            <div class="choose-income-label">Введите статьи возможного дохода через запятую</div>
-            <input class="choose-income" type="text" id="income">
+            <!--<div class="count-budget">Расчет дневного бюджета</div>
+            <button class="count-budget-btn">Рассчитать</button>-->
             
             <div class="checksavings">Есть ли накопления: 
                 <input id="savings" type="checkbox" />
@@ -45,14 +46,21 @@
 			<input class="choose-sum" id="sum" type="text">
 			<label for="percent">Процент</label>
             <input class="choose-percent" id="percent" type="text">
+
+            <div class="choose-income-label">Введите статьи дополнительного дохода</div>
+            <input class="choose-income" type="text" id="income_1" placeholder="статья">
+            <input class="choose-income" type="text" id="income_2" placeholder="сумма">
+            <input class="choose-income" type="text" id="income_3" placeholder="статья">
+            <input class="choose-income" type="text" id="income_4" placeholder="сумма">
+            <button class="choose-income-btn">Утвердить</button>
             
             <div class="open">
-                <button class="start" id="start">Начать расчет</button>
+                <button class="calc" id="calc">Рассчитать бюджет</button>
             </div>
         </div>
         <div class="result">
             <div class="result-table">
-                <div class="budget">Доход: </div>
+                <div class="budget">Основной доход: </div>
                 <div class="budget-value"></div>
     
                 <div class="daybudget">Бюджет на 1 день: </div>
@@ -73,21 +81,22 @@
                 <div class="monthsavings">Накопления за 1 месяц:</div>
                 <div class="monthsavings-value"></div>
     
-                <div class="yearsavings">Накопления за 1 год:</div>
-                <div class="yearsavings-value"></div>
+                <!--<div class="yearsavings">Накопления за 1 год:</div>
+                <div class="yearsavings-value"></div>-->
+
             </div>
-            <div class="time-data">
-                <div class="year">
-                    Год:
-                    <input class="year-value" type="text" readonly>
+            <div class="final">
+                <div class="balance">
+                    Остаток:
+                    <input class="balance-value" type="text" readonly>
                 </div>
-                <div class="month">
-                    Месяц:
-                    <input class="month-value" type="text" readonly>
+                <div class="shortage">
+                    Дефицит бюджета:
+                    <input class="shortage-value" type="text" readonly>
                 </div>
-                <div class="day">
-                    День:
-                    <input class="day-value" type="text" readonly>
+                <div class="potential_income">
+                    Потенциальный доход за 1 месяц при переводе в накопления:
+                    <input class="potential_income-value" type="text" readonly>
                 </div>
             </div>
         </div>
