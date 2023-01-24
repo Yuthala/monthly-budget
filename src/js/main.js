@@ -1,18 +1,47 @@
 'use strict';
 
+let startBtn = document.getElementById ('start'),
+	//values = document.querySelectorAll('[class$="-value"]'),
+	budgetValue = document.getElementsByClassName('budget-value')[0],
+	dayBudgetValue = document.getElementsByClassName('daybudget-value')[0],
+	levelValue = document.getElementsByClassName('level-value')[0],
+	expenseslValue = document.getElementsByClassName('expenses-value')[0],
+	optionalExpensesValue = document.getElementsByClassName('optionalexpenses-value')[0],
+	incomeValue = document.getElementsByClassName('income-value')[0],
+	monthSavingsValue = document.getElementsByClassName('monthsavings-value')[0],
+	yearSavingsValue = document.getElementsByClassName('yearsavings-value')[0],
+
+	expMandatoryItem = document.getElementsByClassName ('expenses-item'),
+	btnMandatoryExpenses = document.getElementsByTagName ('button')[0],
+	btnOptionalExpenses = document.getElementsByTagName ('button') [1],
+	btnCalculate = document.getElementsByTagName ('button') [2],
+	expOptionalItem = document.querySelectorAll ('.optionalexpenses-item'),
+
+	addIncome = document.querySelector ('#income'),
+	checkSavings = document.querySelector ('#savings'),
+	savingsSum = document.querySelector ('#sum'),
+	savingsPercent = document.querySelector ('#percent'),
+	inputYear = document.querySelector ('.year-value'),
+	inputMonth = document.querySelector ('.month-value'),
+	inputDay = document.querySelector ('.day-value');
+
+
 let money, time;
 
-/*запрашиваем у пользователя бюджет и дату*/
-function start() {
-	money = +prompt("Ваш бюджет на месяц?", '');
-	time = prompt("Введите дату в формате YYYY-MM-DD", '');
+
+startBtn.addEventListener('click', function() {
+	time = prompt("Введите дату в формате YYYY-MM-DD", ''); //получаем от пользователя дату
+	money = +prompt("Ваш бюджет на месяц?", ''); //получаем от пользователя его бюджет на месяц (размер доходов)
 
 	while (isNaN(money) || money == "" || money == null) {
-		money = +prompt("Ваш бюджет на месяц?", '');
+		money = +prompt("Ваш бюджет на месяц?", '');//проверка корректно ли введена сумма дохода
 	}
-}
-start();
-
+	appData.budget = money; //полученные от пользователя данные записываем в объект appData
+	budgetValue.textContent = money.toFixed(); //полученные от пользователя данные записываем в созданный div budgetValue
+	inputYear.value = new Date(Date.parse(time)).getFullYear();
+	inputMonth.value = new Date(Date.parse(time)).getMonth() + 1;
+	inputDay.value = new Date(Date.parse(time)).getDate();
+});
 
 /*массив с данными*/
 let appData = {
@@ -100,9 +129,9 @@ let appData = {
 // appData.chooseExpenses();
 // appData.detectDayBudget();
 
-for (var key in appData) {
+/*for (var key in appData) {
 	if (typeof appData.key === 'function') {
 		appData.key();
 	}
 	alert('Наша программа включает в себя данные:' +key + ' - ' + appData[key]);
-};
+};*/
