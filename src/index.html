@@ -19,40 +19,42 @@
     </div>
     <div class="main">
         <div class="data">
-            <button class="start" id="start">начать</button>
+            <!--<button class="start" id="start">начать</button>-->
+            <div class="budget_enter">Ваш бюджет на месяц</div>
+            <input id="budget_input" class="input-field budget_input" type="text" data-exp="input-2" placeholder="Ваш бюджет на месяц" atofocus>
             <div class="choose-expenses">Введите обязательные расходы</div>
-            <input class="expenses-item" type="text" id="expenses_1" placeholder="статья">
-			<input class="expenses-item" type="text" id="expenses_2" placeholder="сумма">
-			<input class="expenses-item" type="text" id="expenses_3" placeholder="статья">
-			<input class="expenses-item" type="text" id="expenses_4" placeholder="сумма">
-            <input class="expenses-item" type="text" id="expenses_5" placeholder="статья">
-			<input class="expenses-item" type="text" id="expenses_6" placeholder="сумма">
+            <input class="input-field expenses-item" type="text" id="input-2" data-exp="input-3" placeholder="статья расходов">
+			<input class="input-field expenses-item" type="text" id="input-3" data-exp="input-4"placeholder="сумма">
+			<input class="input-field expenses-item" type="text" id="input-4" data-exp="input-5"placeholder="статья расходов">
+			<input class="input-field expenses-item" type="text" id="input-5" data-exp="input-6"placeholder="сумма">
+            <input class="input-field expenses-item" type="text" id="input-6" data-exp="input-7"placeholder="статья расходов">
+			<input class="input-field expenses-item" type="text" id="input-7" data-exp="input-8"placeholder="сумма">
             <!--<button class="expenses-item-btn">Утвердить</button>-->
             
             <div class="optionalexpenses">Введите необязательные расходы</div>
-			<input class="optionalexpenses-item" type="text" id="optionalexpenses_1" placeholder="статья">
-			<input class="optionalexpenses-item" type="text" id="optionalexpenses_2" placeholder="сумма">
-			<input class="optionalexpenses-item" type="text" id="optionalexpenses_3" placeholder="статья">
-            <input class="optionalexpenses-item" type="text" id="optionalexpenses_4" placeholder="сумма">
-            <button class="optionalexpenses-btn">Утвердить</button>
+			<input class="input-field optionalexpenses-item" type="text" id="optionalexpenses_1" placeholder="статья расходов">
+			<input class="input-field optionalexpenses-item" type="text" id="optionalexpenses_2" placeholder="сумма">
+			<input class="input-field optionalexpenses-item" type="text" id="optionalexpenses_3" placeholder="статья расходов">
+            <input class="input-field optionalexpenses-item" type="text" id="optionalexpenses_4" placeholder="сумма">
+            <button class="input-field optionalexpenses-btn">Утвердить</button>
             
             <!--<div class="count-budget">Расчет дневного бюджета</div>
             <button class="count-budget-btn">Рассчитать</button>-->
             
             <div class="checksavings">Есть ли накопления: 
-                <input id="savings" type="checkbox" />
+                <input id="savings" type="checkbox" class="input-field"/>
             </div>
             <label for="sum">Сумма</label>
-			<input class="choose-sum" id="sum" type="text">
+			<input class="input-field choose-sum" id="sum" type="text">
 			<label for="percent">Процент</label>
-            <input class="choose-percent" id="percent" type="text">
+            <input class="input-field choose-percent" id="percent" type="text">
 
             <div class="choose-income-label">Введите статьи дополнительного дохода</div>
-            <input class="choose-income" type="text" id="income_1" placeholder="статья">
-            <input class="choose-income" type="text" id="income_2" placeholder="сумма">
-            <input class="choose-income" type="text" id="income_3" placeholder="статья">
-            <input class="choose-income" type="text" id="income_4" placeholder="сумма">
-            <button class="choose-income-btn">Утвердить</button>
+            <input class="input-field choose-income" type="text" id="income_1" placeholder="статья доходов">
+            <input class="input-field choose-income" type="text" id="income_2" placeholder="сумма">
+            <input class="input-field choose-income" type="text" id="income_3" placeholder="статья доходов">
+            <input class="input-field choose-income" type="text" id="income_4" placeholder="сумма">
+            <button class="input-field choose-income-btn">Утвердить</button>
             
             <div class="open">
                 <button class="calc" id="calc">Рассчитать бюджет</button>
@@ -102,6 +104,6 @@
         </div>
     </div>
 </div>
-    <script src="js/main.js"></script>
+    <script defer src="js/main.js"></script>
 </body>
 </html>
