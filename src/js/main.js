@@ -1,5 +1,9 @@
 //'use strict';
-//TO DO: chooseExpenses, chooseOptExpenses - переделать prompt на поля вода; изменить цвет в инпутах на черный
+//TO DO: сделать серый цвет инпутов накоплений, если checkbox = false;
+//раздел "статьи дополнительного дохода" - добавить checkbox, добавить forEach, убрать кнопку "утвердить", записать в поле "дополнительный доход";
+//секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
+
+//поменять местами поля вывода доп доход и накопления; сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
 
 var startBtn = document.getElementById ('start'),
 	//values = document.querySelectorAll('[class$="-value"]'),
@@ -20,16 +24,12 @@ var startBtn = document.getElementById ('start'),
 	expOptionalItem = document.querySelectorAll ('.optionalexpenses-item'),
 
 	addIncome = document.querySelector ('#income'),
-	checkSavings = document.querySelector ('#savings'),
-	savingsSum = document.querySelector ('#sum'),
-	savingsPercent = document.querySelector ('#percent'),s
+	checkSavings = document.querySelector ('#input-12'),
+	savingsSum = document.querySelector ('#input-13'),
+	savingsPercent = document.querySelector ('#input-14'),
 
 	elementsArray = document.querySelectorAll('.input-field');
 	console.log(elementsArray);
-	//inputYear = document.querySelector ('.year-value'),
-	//inputMonth = document.querySelector ('.month-value'),
-	//inputDay = document.querySelector ('.day-value');
-//var money;
 
 
 elementsArray.forEach(function(elem) {
@@ -38,11 +38,11 @@ elementsArray.forEach(function(elem) {
           e.preventDefault();
 		  console.log(`${this.value} - Значение получено из поля ${elem.id} `);
 
-		  if (elem.id == 'input-2' || elem.id == 'input-4' || elem.id == 'input-6') {
+		  if (elem.id == 'input-2' || elem.id == 'input-4' || elem.id == 'input-6' || elem.id == 'input-8' || elem.id == 'input-10' || elem.id == 'input-12') {
 			document.getElementById(this.dataset.exp).focus();
 			document.getElementById(this.dataset.exp).select();
 			
-		  } else if (elem.id == 'budget_input') {
+		} else if (elem.id == 'budget_input') {
 			let regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
@@ -55,21 +55,56 @@ elementsArray.forEach(function(elem) {
 			appData.detectLevel();
 
         } else if (elem.id == 'input-3' || elem.id == 'input-5' || elem.id == 'input-7') {
-			let regex = /^\d*\.?\d*$/;
+				regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введена сумма дохода	
 		  }
 		  appData.expenses += Number(this.value);
-		  console.log(`${appData.expenses} - Текущая сумма расходов`);
+		  console.log(`${appData.expenses} - Текущая сумма обязательных расходов`);
+		  appData.detectMandatoryExpSum();
 		  document.getElementById(this.dataset.exp).focus();
 		  document.getElementById(this.dataset.exp).select();
-		  appData.detectMandatoryExpSum();
-		} 
+		 
 
-	}
+		} else if (elem.id == 'input-9' || elem.id == 'input-11') {
+			regex = /^\d*\.?\d*$/;
+				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
+				alert ("Введите число без дополнительных символов");
+				return;//проверка корректно ли введена сумма дохода	
+		}
+			appData.optionalExpenses += Number(this.value);
+			console.log(`${appData.optionalExpenses} - Текущая сумма необязательных расходов`);
+			appData.detectOptExpSum();
+			document.getElementById(this.dataset.exp).focus();
+		  	document.getElementById(this.dataset.exp).select();
+			
+	} else if (elem.id == 'input-13') {
+		regex = /^\d*\.?\d*$/;
+				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
+				alert ("Введите число без дополнительных символов");
+				return;//проверка корректно ли введена сумма
+		}
+		appData.passiveIncome =  Number(this.value);
+		console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
+		document.getElementById(this.dataset.exp).focus();
+		document.getElementById(this.dataset.exp).select();
+
+	} else if (elem.id == 'input-14') {
+		regex = /^\d*\.?\d*$/;
+				while (this.value == "" || this.value == null || this.value > 100 || !regex.test(this.value)){
+				alert ("Введите число без дополнительных символов");
+				return;//проверка корректно ли введен процент	
+		}
+		let calculations = appData.passiveIncome*Number(this.value)/100/12;
+		monthSavingsValue.textContent = calculations.toFixed();
+		document.getElementById(this.dataset.exp).focus();
+		document.getElementById(this.dataset.exp).select();
+	} 
+}
     });
 });
+
 
 
 //startBtn.addEventListener('click', function() {
@@ -120,11 +155,11 @@ elementsArray.forEach(function(elem) {
 /*массив с данными*/
 let appData = {
 	budget: 0.0,
-	//timeData: time,
 	expenses: 0.0,
-	optionalExpenses: {},
+	optionalExpenses: 0.0,
 	income: [],
 	savings: true,
+	passiveIncome: 0.0,
 	detectDayBudget: function() { /*расчет бюджета на 1 день */
 		appData.moneyPerDay = (appData.budget / 30).toFixed();
 		dayBudgetValue.textContent = appData.moneyPerDay;
@@ -150,6 +185,13 @@ let appData = {
 		expenseslValue.textContent = appData.expenses;
 	},
 
+	detectOptExpSum: function() {
+		optionalExpensesValue.textContent = appData.optionalExpenses;
+	},
+
+	// checkSavings: function() {
+
+	// }
 	// chooseExpenses: function() { /*запрашиваем у пользователя 2 статьи обязательных расходов */
 	// 	for (let i = 0; i < 3; i++) {
 	// 		let a = prompt ("Введите обязательную статью расходов в этом месяце", ''),
@@ -166,21 +208,21 @@ let appData = {
 	// 	}
 	// },
 
-	chooseOptExpenses: function() { /*запрашиваем у пользователя 2 статьи необязательных расходов */
-		for (let i = 0; i < 2; i++) {
-			let c = prompt ("Введите необязательную статью расходов в этом месяце", ''),
-			d = +prompt ("Во сколько обойдется?", '');
+	// chooseOptExpenses: function() { /*запрашиваем у пользователя 2 статьи необязательных расходов */
+	// 	for (let i = 0; i < 2; i++) {
+	// 		let c = prompt ("Введите необязательную статью расходов в этом месяце", ''),
+	// 		d = +prompt ("Во сколько обойдется?", '');
 		
-			if (typeof(c) === 'string' && typeof(c) != null && c != '' 
-			&& typeof(d) != null && d != '' && c.length < 50) {
-				console.log ("done");
-				appData.optionalExpenses[c] = d; //добавить новое значение в объект
-			} else {
-				console.log ("bad result");
-				i--;
-			}
-		}
-	},
+	// 		if (typeof(c) === 'string' && typeof(c) != null && c != '' 
+	// 		&& typeof(d) != null && d != '' && c.length < 50) {
+	// 			console.log ("done");
+	// 			appData.optionalExpenses[c] = d; //добавить новое значение в объект
+	// 		} else {
+	// 			console.log ("bad result");
+	// 			i--;
+	// 		}
+	// 	}
+	// },
 
 	checkSavings: function() { /*проверяем есть ли накопления и рассчитываем сумму ежемесячного дохода */
 		if (appData.savings == true) {
@@ -210,6 +252,20 @@ let appData = {
 		});
 	}
 };
+
+checkSavings.addEventListener('change', function() {
+	if (this.checked) {
+		console.log("true");
+		savingsSum.disabled = false;
+		savingsPercent.disabled = false;
+	} else {
+		console.log("false");
+		savingsSum.disabled = true;
+		savingsPercent.disabled = true;
+
+	}
+});
+console.log(`${appData.savings} - Значение checkbox накоплений`);
 
 // appData.chooseExpenses();
 // appData.detectDayBudget();
