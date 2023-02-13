@@ -1,6 +1,7 @@
 //'use strict';
-//TO DO: сделать серый цвет инпутов накоплений, если checkbox = false;
-//раздел "статьи дополнительного дохода" - добавить checkbox, добавить forEach, убрать кнопку "утвердить", записать в поле "дополнительный доход";
+//TO DO: 
+//раздел "статьи дополнительного дохода" - сделать переход по Enter,записать сумму доп дохода в поле "дополнительный доход";
+//для checkbox сделать чтобы поля становились disabled, если checkbox неактивен
 //секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
 
 //поменять местами поля вывода доп доход и накопления; сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
@@ -16,21 +17,30 @@ var startBtn = document.getElementById ('start'),
 	incomeValue = document.getElementsByClassName('income-value')[0],
 	monthSavingsValue = document.getElementsByClassName('monthsavings-value')[0],
 	yearSavingsValue = document.getElementsByClassName('yearsavings-value')[0],
-
 	expMandatoryItem = document.getElementsByClassName ('expenses-item'),
 	btnMandatoryExpenses = document.getElementsByTagName ('button')[0],
 	btnOptionalExpenses = document.getElementsByTagName ('button') [1],
 	btnCalculate = document.getElementsByTagName ('button') [2],
 	expOptionalItem = document.querySelectorAll ('.optionalexpenses-item'),
 
+
 	addIncome = document.querySelector ('#income'),
 	checkSavings = document.querySelector ('#input-12'),
+	checkAddIncome = document.querySelector ('#input-15'),
 	savingsSum = document.querySelector ('#input-13'),
 	savingsPercent = document.querySelector ('#input-14'),
+	labelSum = document.getElementsByTagName ('label')[0],
+	labelPercent = document.getElementsByTagName ('label')[1],
 
-	elementsArray = document.querySelectorAll('.input-field');
+	elementsArray = document.querySelectorAll('.input-field'),
+	chooseIncome1 = document.querySelectorAll('.choose-income')[0],
+	chooseIncome2 = document.querySelectorAll('.choose-income')[1],
+	chooseIncome3 = document.querySelectorAll('.choose-income')[2],
+	chooseIncome4 = document.querySelectorAll('.choose-income')[3],
+	checkbox = document.querySelectorAll('.ckeckbox');
+
 	console.log(elementsArray);
-
+	console.log(checkbox);
 
 elementsArray.forEach(function(elem) {
     elem.addEventListener('keydown', function(e) {
@@ -79,33 +89,32 @@ elementsArray.forEach(function(elem) {
 			document.getElementById(this.dataset.exp).focus();
 		  	document.getElementById(this.dataset.exp).select();
 			
-	} else if (elem.id == 'input-13') {
-		regex = /^\d*\.?\d*$/;
+		} else if (elem.id == 'input-13') {
+			regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введена сумма
 		}
-		appData.passiveIncome =  Number(this.value);
-		console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
-		document.getElementById(this.dataset.exp).focus();
-		document.getElementById(this.dataset.exp).select();
+			appData.passiveIncome =  Number(this.value);
+			console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
+			document.getElementById(this.dataset.exp).focus();
+			document.getElementById(this.dataset.exp).select();
 
-	} else if (elem.id == 'input-14') {
-		regex = /^\d*\.?\d*$/;
+		} else if (elem.id == 'input-14') {
+			regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 100 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введен процент	
 		}
-		let calculations = appData.passiveIncome*Number(this.value)/100/12;
-		monthSavingsValue.textContent = calculations.toFixed();
-		document.getElementById(this.dataset.exp).focus();
-		document.getElementById(this.dataset.exp).select();
-	} 
+			let calculations = appData.passiveIncome*Number(this.value)/100/12;
+			monthSavingsValue.textContent = calculations.toFixed();
+			document.getElementById(this.dataset.exp).focus();
+			document.getElementById(this.dataset.exp).select();
+
+		}
 }
     });
 });
-
-
 
 //startBtn.addEventListener('click', function() {
 	//startBtn.style.transition = 'animation ease-out 2s';
@@ -253,17 +262,37 @@ let appData = {
 	}
 };
 
-checkSavings.addEventListener('change', function() {
-	if (this.checked) {
-		console.log("true");
-		savingsSum.disabled = false;
-		savingsPercent.disabled = false;
-	} else {
-		console.log("false");
-		savingsSum.disabled = true;
-		savingsPercent.disabled = true;
-
-	}
+checkbox.forEach(function(elem) {
+	elem.addEventListener('change', function() {
+		if(elem.id == 'input-12') {
+			if (this.checked) {
+				console.log("true");
+				savingsSum.disabled = false;
+				savingsPercent.disabled = false;
+				labelSum.classList.add('active');
+				labelPercent.classList.add('active');
+			} 
+		} else if(elem.id == 'input-15') {
+			if (this.checked) {
+				console.log("true");
+				chooseIncome1.disabled = false;
+				chooseIncome2.disabled = false;
+				chooseIncome3.disabled = false;
+				chooseIncome4.disabled = false;
+			} 
+		}
+		document.getElementById(this.dataset.exp).focus();
+		document.getElementById(this.dataset.exp).select();
+		
+		// else {
+		// 	console.log("false");
+		// 	savingsSum.disabled = true;
+		// 	savingsPercent.disabled = true;
+		// 	chooseIncome.disabled = true;
+		// 	labelSum.classList.remove('active');
+		// 	labelPercent.classList.remove('active');
+		// }
+})
 });
 console.log(`${appData.savings} - Значение checkbox накоплений`);
 

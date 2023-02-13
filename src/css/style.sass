@@ -54,13 +54,17 @@ a
 /*.input-field
 	&::placeholder
 		opacity: 1*/
+label
+	color: lightgray
+.active 
+	color: black
 .data
 	.choose-expenses, .optionalexpenses, .count-budget, .choose-income-label, .budget_enter
 		@include header
 	.expenses-item, .optionalexpenses-item, .choose-income, .choose-sum, .choose-percent, .budget_input
 		@include input
 		&::placeholder
-			opacity: .3
+			opacity: .5
 	.expenses-item-btn, .optionalexpenses-btn, .count-budget-btn, .choose-income-btn
 		@include btn
 	/*.optionalexpenses-item
@@ -77,6 +81,9 @@ a
 		text-align: center
 		input
 			width: 30px
+	.checkincome
+		margin: 20px auto
+		text-align: center
 	.choose-sum, .choose-percent
 		width: 30%
 		margin: 15px
