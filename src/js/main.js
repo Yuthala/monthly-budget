@@ -1,10 +1,12 @@
 //'use strict';
 //TO DO: 
-//раздел "статьи дополнительного дохода" - сделать переход по Enter,записать сумму доп дохода в поле "дополнительный доход";
-//для checkbox сделать чтобы поля становились disabled, если checkbox неактивен
-//секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
 
-//поменять местами поля вывода доп доход и накопления; сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
+//заменить nested if на другую проверку (если оба поля "Сумма" и "процент" имеют валидные значения, только тогда производятся вычисления)
+//секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
+//поправить alert на проценты (если более 100, то оповещает пользователя соответственно)
+//сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
+
+//рефактор кода
 
 var startBtn = document.getElementById ('start'),
 	//values = document.querySelectorAll('[class$="-value"]'),
@@ -29,18 +31,21 @@ var startBtn = document.getElementById ('start'),
 	checkAddIncome = document.querySelector ('#input-15'),
 	savingsSum = document.querySelector ('#input-13'),
 	savingsPercent = document.querySelector ('#input-14'),
-	labelSum = document.getElementsByTagName ('label')[0],
-	labelPercent = document.getElementsByTagName ('label')[1],
+	labels= document.getElementsByTagName ('label'),
+	//labelPercent = document.getElementsByTagName ('label')[1],
 
 	elementsArray = document.querySelectorAll('.input-field'),
-	chooseIncome1 = document.querySelectorAll('.choose-income')[0],
-	chooseIncome2 = document.querySelectorAll('.choose-income')[1],
-	chooseIncome3 = document.querySelectorAll('.choose-income')[2],
-	chooseIncome4 = document.querySelectorAll('.choose-income')[3],
-	checkbox = document.querySelectorAll('.ckeckbox');
+	income = document.querySelectorAll ('.choose-income'),
+	//chooseIncome1 = document.querySelectorAll('.choose-income')[0],
+	//chooseIncome2 = document.querySelectorAll('.choose-income')[1],
+	// chooseIncome3 = document.querySelectorAll('.choose-income')[2],
+	//chooseIncome4 = document.querySelectorAll('.choose-income')[3],
+	checkbox = document.querySelectorAll('.ckeckbox'),
+	regex = /^\d*\.?\d*$/;
 
 	console.log(elementsArray);
 	console.log(checkbox);
+	console.log(income);
 
 elementsArray.forEach(function(elem) {
     elem.addEventListener('keydown', function(e) {
@@ -48,28 +53,28 @@ elementsArray.forEach(function(elem) {
           e.preventDefault();
 		  console.log(`${this.value} - Значение получено из поля ${elem.id} `);
 
-		  if (elem.id == 'input-2' || elem.id == 'input-4' || elem.id == 'input-6' || elem.id == 'input-8' || elem.id == 'input-10' || elem.id == 'input-12') {
+		  if (elem.id == 'input-2' || elem.id == 'input-4' || elem.id == 'input-6' || elem.id == 'input-8' || elem.id == 'input-10' || elem.id == 'input-12' || elem.id == 'input-15'|| elem.id == 'input-16' || elem.id == 'input-18') {
 			document.getElementById(this.dataset.exp).focus();
 			document.getElementById(this.dataset.exp).select();
 			
 		} else if (elem.id == 'budget_input') {
-			let regex = /^\d*\.?\d*$/;
+			// let regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введена сумма дохода	
-		  }
-		  appData.budget = this.value;
+		  		}
+		  	appData.budget = this.value;
 			document.getElementById(this.dataset.exp).focus();
 			document.getElementById(this.dataset.exp).select();
 			appData.detectDayBudget();
 			appData.detectLevel();
 
         } else if (elem.id == 'input-3' || elem.id == 'input-5' || elem.id == 'input-7') {
-				regex = /^\d*\.?\d*$/;
+				//regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введена сумма дохода	
-		  }
+		  		}
 		  appData.expenses += Number(this.value);
 		  console.log(`${appData.expenses} - Текущая сумма обязательных расходов`);
 		  appData.detectMandatoryExpSum();
@@ -78,11 +83,11 @@ elementsArray.forEach(function(elem) {
 		 
 
 		} else if (elem.id == 'input-9' || elem.id == 'input-11') {
-			regex = /^\d*\.?\d*$/;
+			//regex = /^\d*\.?\d*$/;
 				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введена сумма дохода	
-		}
+				}
 			appData.optionalExpenses += Number(this.value);
 			console.log(`${appData.optionalExpenses} - Текущая сумма необязательных расходов`);
 			appData.detectOptExpSum();
@@ -90,27 +95,61 @@ elementsArray.forEach(function(elem) {
 		  	document.getElementById(this.dataset.exp).select();
 			
 		} else if (elem.id == 'input-13') {
-			regex = /^\d*\.?\d*$/;
-				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){
-				alert ("Введите число без дополнительных символов");
-				return;//проверка корректно ли введена сумма
-		}
-			appData.passiveIncome =  Number(this.value);
-			console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
-			document.getElementById(this.dataset.exp).focus();
-			document.getElementById(this.dataset.exp).select();
+			//regex = /^\d*\.?\d*$/;
+			if (this.value != "" || this.value != null || this.value < 1000000000 || regex.test(this.value)){
+				//alert ("Введите число без дополнительных символов");
+				//return;//проверка корректно ли введена сумма
+				appData.passiveIncome =  Number(this.value);
+				console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
+				document.getElementById(this.dataset.exp).focus();
+				document.getElementById(this.dataset.exp).select();
+					if (elem.id == 'input-14') {
+						while (this.value == "" || this.value == null || !regex.test(this.value)) {
+							alert ("Введите число без дополнительных символов");
+						}
+						// if (this.value == "" || this.value == null || !regex.test(this.value)){
+						// 	alert ("Введите число без дополнительных символов");
+						// 	return;
+						// } else if (this.value > 100 || this.value <= 0) {
+						// 	alert ("введите число от 0 до 100");
+						// 	return;
+						// } else {
+						// 	let calculations = appData.passiveIncome*Number(this.value)/100/12;
+						// 	monthSavingsValue.textContent = calculations.toFixed();
+						// 	document.getElementById(this.dataset.exp).focus();
+						// 	document.getElementById(this.dataset.exp).select();
+						// }
+					}
+				}
+			// appData.passiveIncome =  Number(this.value);
+			
 
-		} else if (elem.id == 'input-14') {
+		// } else if (elem.id == 'input-14') {
+		// 	//regex = /^\d*\.?\d*$/;
+		// 		if (this.value == "" || this.value == null || !regex.test(this.value)){
+		// 			alert ("Введите число без дополнительных символов");
+		// 			return;
+		// 		} else if (this.value > 100 || this.value <= 0) {
+		// 			alert ("введите число от 0 до 100");
+		// 			return;
+		// 		}
+
+			// let calculations = appData.passiveIncome*Number(this.value)/100/12;
+			// monthSavingsValue.textContent = calculations.toFixed();
+			// document.getElementById(this.dataset.exp).focus();
+			// document.getElementById(this.dataset.exp).select();
+
+		} else if (elem.id == 'input-17' || elem.id == 'input-19') {
 			regex = /^\d*\.?\d*$/;
-				while (this.value == "" || this.value == null || this.value > 100 || !regex.test(this.value)){
+				while (this.value == "" || this.value == null || this.value > 10000000 || !regex.test(this.value)){
 				alert ("Введите число без дополнительных символов");
 				return;//проверка корректно ли введен процент	
-		}
-			let calculations = appData.passiveIncome*Number(this.value)/100/12;
-			monthSavingsValue.textContent = calculations.toFixed();
+				}
+			appData.additionalIncome += Number(this.value);
+			console.log(`${appData.additionalIncome} - Текущая сумма дополнительных доходов`);
+			appData.detectIncome();
 			document.getElementById(this.dataset.exp).focus();
-			document.getElementById(this.dataset.exp).select();
-
+		  	document.getElementById(this.dataset.exp).select();
 		}
 }
     });
@@ -166,9 +205,10 @@ let appData = {
 	budget: 0.0,
 	expenses: 0.0,
 	optionalExpenses: 0.0,
-	income: [],
+	//income: [],
 	savings: true,
 	passiveIncome: 0.0,
+	additionalIncome: 0.0,
 	detectDayBudget: function() { /*расчет бюджета на 1 день */
 		appData.moneyPerDay = (appData.budget / 30).toFixed();
 		dayBudgetValue.textContent = appData.moneyPerDay;
@@ -233,56 +273,77 @@ let appData = {
 	// 	}
 	// },
 
-	checkSavings: function() { /*проверяем есть ли накопления и рассчитываем сумму ежемесячного дохода */
-		if (appData.savings == true) {
-			let save = +prompt("Какова сумма накоплений?"),
-				percent = +prompt("Под какой процент?");
+	// checkSavings: function() { /*проверяем есть ли накопления и рассчитываем сумму ежемесячного дохода */
+	// 	if (appData.savings == true) {
+	// 		let save = +prompt("Какова сумма накоплений?"),
+	// 			percent = +prompt("Под какой процент?");
 			
-			appData.monthIncome = save/100/12*percent;
-			alert("Доход в месяц с вашего депозита: " + appData.monthIncome);
-		}
-	},
+	// 		appData.monthIncome = save/100/12*percent;
+	// 		alert("Доход в месяц с вашего депозита: " + appData.monthIncome);
+	// 	}
+	// },
 	
-	chooseIncome: function() {
-			let items = prompt('Что принесет дополнительный доход? (Перечислите через запятую)', '');
-		
-			if (typeof(items) != 'string' || typeof(items) == null || items == '' ) 
-		{
-			alert('Вы ввели неверные данные или не ввели их вовсе');
-		} else {
-			console.log ("done");
-			appData.income = items.split(', ');
-			appData.income.push(prompt('Может что-то еще?'));
-			appData.income.sort();
-		}
-
-			appData.income.forEach(function(itemmassive, i) {
-				alert('Способы доп. заработка: ' + (i+1) + " - " + itemmassive);
-		});
+	detectIncome: function() {
+		incomeValue.textContent = appData.additionalIncome;
 	}
+	// chooseIncome: function() {
+	// 		let items = prompt('Что принесет дополнительный доход? (Перечислите через запятую)', '');
+		
+	// 		if (typeof(items) != 'string' || typeof(items) == null || items == '' ) 
+	// 	{
+	// 		alert('Вы ввели неверные данные или не ввели их вовсе');
+	// 	} else {
+	// 		console.log ("done");
+	// 		appData.income = items.split(', ');
+	// 		appData.income.push(prompt('Может что-то еще?'));
+	// 		appData.income.sort();
+	// 	}
+
+	// 		appData.income.forEach(function(itemmassive, i) {
+	// 			alert('Способы доп. заработка: ' + (i+1) + " - " + itemmassive);
+	// 	});
+	// }
 };
 
 checkbox.forEach(function(elem) {
 	elem.addEventListener('change', function() {
 		if(elem.id == 'input-12') {
 			if (this.checked) {
-				console.log("true");
+				console.log("true - input-12");
 				savingsSum.disabled = false;
 				savingsPercent.disabled = false;
-				labelSum.classList.add('active');
-				labelPercent.classList.add('active');
-			} 
+				// for (i = 0; i < labels.length; i++) {
+				// 	labels.classList.add('active');
+				// }
+				//labelPercent.classList.add('active');
+				// document.getElementById(this.dataset.exp).focus();
+				// document.getElementById(this.dataset.exp).select();
+				//return;
+			} else {
+				savingsSum.disabled = true;
+				savingsPercent.disabled = true;
+				for (i = 0; i < labels.length; i++) {
+					labels.classList.remove('active');
+				//labelPercent.classList.remove('active');
+				}
+			}
 		} else if(elem.id == 'input-15') {
 			if (this.checked) {
-				console.log("true");
-				chooseIncome1.disabled = false;
-				chooseIncome2.disabled = false;
-				chooseIncome3.disabled = false;
-				chooseIncome4.disabled = false;
-			} 
+				console.log("true - input-15");
+				for (let i = 0; i < income.length; i++) {
+					income[i].removeAttribute ('disabled');
+				}
+					
+				//chooseIncome1.disabled = false;
+				//chooseIncome2.disabled = false;
+
+				// chooseIncome2.disabled = false;
+				// chooseIncome3.disabled = false;
+				// chooseIncome4.disabled = false;
+			} else {
+				income.disabled = true;
+			}
 		}
-		document.getElementById(this.dataset.exp).focus();
-		document.getElementById(this.dataset.exp).select();
 		
 		// else {
 		// 	console.log("false");
@@ -292,7 +353,7 @@ checkbox.forEach(function(elem) {
 		// 	labelSum.classList.remove('active');
 		// 	labelPercent.classList.remove('active');
 		// }
-})
+	});
 });
 console.log(`${appData.savings} - Значение checkbox накоплений`);
 
