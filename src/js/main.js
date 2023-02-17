@@ -3,7 +3,6 @@
 
 //заменить nested if на другую проверку (если оба поля "Сумма" и "процент" имеют валидные значения, только тогда производятся вычисления)
 //секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
-//поправить alert на проценты (если более 100, то оповещает пользователя соответственно)
 //сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
 
 //рефактор кода
@@ -31,7 +30,8 @@ var startBtn = document.getElementById ('start'),
 	checkAddIncome = document.querySelector ('#input-15'),
 	savingsSum = document.querySelector ('#input-13'),
 	savingsPercent = document.querySelector ('#input-14'),
-	labels= document.getElementsByTagName ('label'),
+	labels = document.querySelectorAll ('label'),
+	//labelSum = document.getElementsByTagName ('label')[0];
 	//labelPercent = document.getElementsByTagName ('label')[1],
 
 	elementsArray = document.querySelectorAll('.input-field'),
@@ -41,11 +41,18 @@ var startBtn = document.getElementById ('start'),
 	// chooseIncome3 = document.querySelectorAll('.choose-income')[2],
 	//chooseIncome4 = document.querySelectorAll('.choose-income')[3],
 	checkbox = document.querySelectorAll('.ckeckbox'),
+	calcButton = document.getElementById ('calc'),
+
+	remainderValue = document.getElementsByClassName ('balance-value'),
+	shortageValue = document.getElementsByClassName ('shortage-value'),
+	potentialIncomeValue = document.getElementsByClassName ('potential_income-value'),
+
 	regex = /^\d*\.?\d*$/;
 
 	console.log(elementsArray);
 	console.log(checkbox);
 	console.log(income);
+	console.log(labels);
 
 elementsArray.forEach(function(elem) {
     elem.addEventListener('keydown', function(e) {
@@ -96,48 +103,50 @@ elementsArray.forEach(function(elem) {
 			
 		} else if (elem.id == 'input-13') {
 			//regex = /^\d*\.?\d*$/;
-			if (this.value != "" || this.value != null || this.value < 1000000000 || regex.test(this.value)){
-				//alert ("Введите число без дополнительных символов");
-				//return;//проверка корректно ли введена сумма
+			while (this.value == "" || this.value == null || this.value > 1000000000 || this.value == 0 || !regex.test(this.value)){
+				alert ("Введите число >0 без дополнительных символов");
+				return;
+			}
 				appData.passiveIncome =  Number(this.value);
 				console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
 				document.getElementById(this.dataset.exp).focus();
 				document.getElementById(this.dataset.exp).select();
-					if (elem.id == 'input-14') {
-						while (this.value == "" || this.value == null || !regex.test(this.value)) {
-							alert ("Введите число без дополнительных символов");
-						}
-						// if (this.value == "" || this.value == null || !regex.test(this.value)){
-						// 	alert ("Введите число без дополнительных символов");
-						// 	return;
-						// } else if (this.value > 100 || this.value <= 0) {
-						// 	alert ("введите число от 0 до 100");
-						// 	return;
-						// } else {
-						// 	let calculations = appData.passiveIncome*Number(this.value)/100/12;
-						// 	monthSavingsValue.textContent = calculations.toFixed();
-						// 	document.getElementById(this.dataset.exp).focus();
-						// 	document.getElementById(this.dataset.exp).select();
-						// }
-					}
-				}
+			
+					// if (elem.id == 'input-14') {
+					// 	while (this.value == "" || this.value == null || !regex.test(this.value)) {
+					// 		alert ("Введите число без дополнительных символов");
+					// 	}
+					// 	if (this.value == "" || this.value == null || !regex.test(this.value)){
+					// 		alert ("Введите число без дополнительных символов");
+					// 		return;
+					// 	} else if (this.value > 100 || this.value <= 0) {
+					// 		alert ("введите число от 0 до 100");
+					// 		return;
+					// 	} else {
+					// 		let calculations = appData.passiveIncome*Number(this.value)/100/12;
+					// 		monthSavingsValue.textContent = calculations.toFixed();
+					// 		document.getElementById(this.dataset.exp).focus();
+					// 		document.getElementById(this.dataset.exp).select();
+					// 	}
+					// }
+				
 			// appData.passiveIncome =  Number(this.value);
 			
 
-		// } else if (elem.id == 'input-14') {
-		// 	//regex = /^\d*\.?\d*$/;
-		// 		if (this.value == "" || this.value == null || !regex.test(this.value)){
-		// 			alert ("Введите число без дополнительных символов");
-		// 			return;
-		// 		} else if (this.value > 100 || this.value <= 0) {
-		// 			alert ("введите число от 0 до 100");
-		// 			return;
-		// 		}
+		} else if (elem.id == 'input-14') {
+			//regex = /^\d*\.?\d*$/;
+				if (this.value == "" || this.value == null || !regex.test(this.value)){
+					alert ("Введите число без дополнительных символов");
+					return;
+				} else if (this.value > 100 || this.value < 0) {
+					alert ("введите число от 0 до 100");
+					return;
+				}
 
-			// let calculations = appData.passiveIncome*Number(this.value)/100/12;
-			// monthSavingsValue.textContent = calculations.toFixed();
-			// document.getElementById(this.dataset.exp).focus();
-			// document.getElementById(this.dataset.exp).select();
+			let calculations = appData.passiveIncome*Number(this.value)/100/12;
+			monthSavingsValue.textContent = calculations.toFixed();
+			document.getElementById(this.dataset.exp).focus();
+			document.getElementById(this.dataset.exp).select();
 
 		} else if (elem.id == 'input-17' || elem.id == 'input-19') {
 			regex = /^\d*\.?\d*$/;
@@ -154,6 +163,13 @@ elementsArray.forEach(function(elem) {
 }
     });
 });
+
+
+calcButton.addEventListener ('click', function (e) {
+	e.preventDefault;
+	appData.budgetCalc();
+});
+
 
 //startBtn.addEventListener('click', function() {
 	//startBtn.style.transition = 'animation ease-out 2s';
@@ -205,7 +221,6 @@ let appData = {
 	budget: 0.0,
 	expenses: 0.0,
 	optionalExpenses: 0.0,
-	//income: [],
 	savings: true,
 	passiveIncome: 0.0,
 	additionalIncome: 0.0,
@@ -285,7 +300,17 @@ let appData = {
 	
 	detectIncome: function() {
 		incomeValue.textContent = appData.additionalIncome;
-	}
+	},
+
+	budgetCalc: function (){
+		let remainder = appData.budget - (appData.expenses + appData.optionalExpenses) + (appData.passiveIncome + appData.additionalIncome);
+		if (remainder => 0) {
+			remainderValue.textContent = remainder;
+		} else {
+			shortageValue.textContent = remainder;
+			shortageValue.classList.add('negative');
+		}
+	},
 	// chooseIncome: function() {
 	// 		let items = prompt('Что принесет дополнительный доход? (Перечислите через запятую)', '');
 		
@@ -312,9 +337,9 @@ checkbox.forEach(function(elem) {
 				console.log("true - input-12");
 				savingsSum.disabled = false;
 				savingsPercent.disabled = false;
-				// for (i = 0; i < labels.length; i++) {
-				// 	labels.classList.add('active');
-				// }
+				for (i = 0; i < labels.length; i++) {
+					labels[i].classList.add('active');
+				}
 				//labelPercent.classList.add('active');
 				// document.getElementById(this.dataset.exp).focus();
 				// document.getElementById(this.dataset.exp).select();
@@ -323,7 +348,7 @@ checkbox.forEach(function(elem) {
 				savingsSum.disabled = true;
 				savingsPercent.disabled = true;
 				for (i = 0; i < labels.length; i++) {
-					labels.classList.remove('active');
+					labels[i].classList.remove('active');
 				//labelPercent.classList.remove('active');
 				}
 			}
@@ -333,36 +358,13 @@ checkbox.forEach(function(elem) {
 				for (let i = 0; i < income.length; i++) {
 					income[i].removeAttribute ('disabled');
 				}
-					
-				//chooseIncome1.disabled = false;
-				//chooseIncome2.disabled = false;
-
-				// chooseIncome2.disabled = false;
-				// chooseIncome3.disabled = false;
-				// chooseIncome4.disabled = false;
 			} else {
 				income.disabled = true;
 			}
 		}
-		
-		// else {
-		// 	console.log("false");
-		// 	savingsSum.disabled = true;
-		// 	savingsPercent.disabled = true;
-		// 	chooseIncome.disabled = true;
-		// 	labelSum.classList.remove('active');
-		// 	labelPercent.classList.remove('active');
-		// }
 	});
 });
 console.log(`${appData.savings} - Значение checkbox накоплений`);
 
-// appData.chooseExpenses();
-// appData.detectDayBudget();
 
-/*for (var key in appData) {
-	if (typeof appData.key === 'function') {
-		appData.key();
-	}
-	alert('Наша программа включает в себя данные:' +key + ' - ' + appData[key]);
-};*/
+
