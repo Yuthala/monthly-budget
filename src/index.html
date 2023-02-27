@@ -24,11 +24,11 @@
             <input id="budget_input" class="input-field budget_input" type="text" data-exp="input-2" placeholder="Ваш бюджет на месяц" atofocus>
             <div class="choose-expenses">Введите обязательные расходы</div>
             <input class="input-field expenses-item" type="text" id="input-2" data-exp="input-3" placeholder="статья расходов">
-			<input class="input-field expenses-item" type="text" id="input-3" data-exp="input-4" placeholder="сумма">
+			<input class="input-field expenses-item expenses-sum" type="text" id="input-3" data-exp="input-4" placeholder="сумма">
 			<input class="input-field expenses-item" type="text" id="input-4" data-exp="input-5" placeholder="статья расходов">
-			<input class="input-field expenses-item" type="text" id="input-5" data-exp="input-6" placeholder="сумма">
+			<input class="input-field expenses-item expenses-sum" type="text" id="input-5" data-exp="input-6" placeholder="сумма">
             <input class="input-field expenses-item" type="text" id="input-6" data-exp="input-7" placeholder="статья расходов">
-			<input class="input-field expenses-item" type="text" id="input-7" data-exp="input-8" placeholder="сумма">
+			<input class="input-field expenses-item expenses-sum" type="text" id="input-7" data-exp="input-8" placeholder="сумма">
             <!--<button class="expenses-item-btn">Утвердить</button>-->
             
             <div class="optionalexpenses">Введите необязательные расходы</div>
@@ -94,15 +94,17 @@
             <div class="final">
                 <div class="balance">
                     Остаток:
-                    <input class="balance-value" type="text" readonly>
+                    <div class="balance-value" id="remainder">
+                    <!--<input class="balance-value" type="text" readonly>-->
                 </div>
                 <div class="shortage">
                     Дефицит бюджета:
-                    <input class="shortage-value" type="text" readonly>
+                    <div class="shortage-value negative" id="shortage-value"></div>
+                    <!--<input class="shortage-value" type="text" id="shortage" readonly>-->
                 </div>
                 <div class="potential_income">
-                    Потенциальный доход за 1 месяц при переводе в накопления:
-                    <input class="potential_income-value" type="text" readonly>
+                    Потенциальный доход на остаток за 1 месяц при переводе в накопления по ставке 7%:
+                    <div class="potential_income-value" id="potential-income"></div>
                 </div>
             </div>
         </div>
