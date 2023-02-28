@@ -29,7 +29,10 @@ let startBtn = document.getElementById ('start'),
 	btnCalculate = document.getElementsByTagName ('button') [2],
 	expOptionalItem = document.querySelectorAll ('.optionalexpenses-item'),
 
-	expensesSum = document.querySelectorAll ('.expenses-sum');
+	expensesSum = document.querySelectorAll ('.expenses-sum'),
+	optionalExpensesSum = document.querySelectorAll ('.opt-expenses-sum'),
+	passiveIncomeSum = document.querySelectorAll ('.choose-sum'),
+
 
 	addIncome = document.querySelector ('#income'),
 	checkSavings = document.querySelector ('#input-12'),
@@ -169,17 +172,26 @@ elementsArray.forEach(function(elem) { //массив инпутов
 
 calcButton.addEventListener ('click', function (e) { //действия по кнопке Рассчитать Бюджет
 	e.preventDefault;
-	appData.budget = budgetEnter.value;
+	appData.budget = budgetEnter.value; //добавляем бюджет в массив
 	appData.detectDayBudget();
 	appData.detectLevel();
 
-	appData.expenses = 0;
+	appData.expenses = 0; //обнуляем и перезаписываем обязательные расходы
 	expensesSum.forEach(function(elem) {
 		appData.expenses += Number(elem.value);
-		console.log(`${appData.expenses} - проверка цикла forEach`);
+		console.log(`${appData.expenses} - проверка цикла forEach expenses`);
+	});
+
+	appData.optionalExpenses = 0; //обнуляем и перезаписываем необязательные расходы
+	optionalExpensesSum.forEach(function (elem) {
+		appData.optionalExpenses += Number(elem.value);
+		console.log(`${appData.optionalExpenses} - проверка цикла forEach optionalExpenses`);
+	});
+
+	
 	
 	appData.budgetCalc();
-});
+
 });
 
 
