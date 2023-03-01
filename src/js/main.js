@@ -1,7 +1,7 @@
 //'use strict';
 //TO DO: 
-//погуглить реактивное гетеры  и сеттеры
-// дописать после строки 178 функции для добавления в объект по кнопке Рассчитать бюджет - необязательные расходы, накопления, дополнительные доходы - по кнопке Рассчитать бюджет значения должны записываться в appData
+//погуглить реактивное гетеры  и сеттеры/data binding
+// дописать после строки 178 функции для добавления в объект по кнопке Рассчитать бюджет - необязательные расходы, накопления (добавить в объект накопления и процент), дополнительные доходы - по кнопке Рассчитать бюджет значения должны записываться в appData
 //два раза считает расходы, если ввести enter и по нажатию Рассчитать бюджет
 // сделать дополнительную функцию для добавления в объект по переходу в другое поле
 //сделать переход по Tab
@@ -31,7 +31,7 @@ let startBtn = document.getElementById ('start'),
 
 	expensesSum = document.querySelectorAll ('.expenses-sum'),
 	optionalExpensesSum = document.querySelectorAll ('.opt-expenses-sum'),
-	passiveIncomeSum = document.querySelectorAll ('.choose-sum'),
+	//passiveIncomeSum = document.querySelectorAll ('.choose-sum'),
 
 
 	addIncome = document.querySelector ('#income'),
@@ -54,7 +54,7 @@ let startBtn = document.getElementById ('start'),
 
 	remainderValue = document.getElementById ('remainder'),
 	shortageValue = document.getElementById ('shortage-value'),
-	potentialIncomeValue = document.getElementById('potential-income'),
+	potentialIncomeValue = document.getElementById ('potential_income'),
 
 	regex = /^\d*\.?\d*$/; 
 
@@ -115,7 +115,7 @@ elementsArray.forEach(function(elem) { //массив инпутов
 				return;
 			}
 				appData.passiveIncome =  Number(this.value);
-				console.log(`${appData.passiveIncome} - доход от накоплений за 1 мес`)
+				console.log(`${appData.passiveIncome} - сумма накоплений`)
 				document.getElementById(this.dataset.exp).focus();
 				document.getElementById(this.dataset.exp).select();
 			
@@ -148,7 +148,7 @@ elementsArray.forEach(function(elem) { //массив инпутов
 					alert ("введите число от 0 до 100");
 					return;
 				}
-
+			appData.percentIncome =  Number(this.value);
 			let calculations = appData.passiveIncome*Number(this.value)/100/12;//расчет накоплений за месяц
 			monthSavingsValue.textContent = calculations.toFixed();
 			document.getElementById(this.dataset.exp).focus();
@@ -188,7 +188,9 @@ calcButton.addEventListener ('click', function (e) { //действия по к�
 		console.log(`${appData.optionalExpenses} - проверка цикла forEach optionalExpenses`);
 	});
 
-	
+	passiveIncome = 0; //обнуляем и перезаписываем сумму накоплений
+	savingsSum = Number(appData.passiveIncome.value);
+	console.log(`${appData.passiveIncome} - проверка что введено в сумму накоплений`);
 	
 	appData.budgetCalc();
 
@@ -240,13 +242,14 @@ calcButton.addEventListener ('click', function (e) { //действия по к�
 	//inputDay.value = new Date(Date.parse(time)).getDate();
 
 
-/*массив с данными*/
+/* объект с данными*/
 let appData = {
 	budget: 0.0,
 	expenses: 0.0,
 	optionalExpenses: 0.0,
 	savings: true,
 	passiveIncome: 0.0,
+	percentIncome: 0.0,
 	additionalIncome: 0.0,
 	remainder: 0.0,
 	potentialIncome: 0.0,
