@@ -1,14 +1,10 @@
 //'use strict';
 //TO DO: 
-//погуглить реактивное гетеры  и сеттеры/data binding
-// дописать после строки 178 функции для добавления в объект по кнопке Рассчитать бюджет - необязательные расходы, накопления (добавить в объект накопления и процент), дополнительные доходы - по кнопке Рассчитать бюджет значения должны записываться в appData
-//два раза считает расходы, если ввести enter и по нажатию Рассчитать бюджет
-// сделать дополнительную функцию для добавления в объект по переходу в другое поле
-//сделать переход по Tab
+
 //заменить nested if на другую проверку (если оба поля "Сумма" и "процент" имеют валидные значения, только тогда производятся вычисления)
 //секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
 //сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
-//добавить кнопку "обновить расчет"
+//добавить кнопку "обновить расчет" - по кнопке Новый Расчет всем значениям присваеивается 0, очистить справочные поля справа (поля заполнить nu)
 //рефактор кода
 
 
@@ -31,6 +27,10 @@ let startBtn = document.getElementById ('start'),
 
 	expensesSum = document.querySelectorAll ('.expenses-sum'),
 	optionalExpensesSum = document.querySelectorAll ('.opt-expenses-sum'),
+	savingsInputSum = document.getElementById ('input-13'),
+	savingsInputPercent = document.getElementById ('input-14'),
+	additionalIncomeSum = document.querySelectorAll ('.add-income-sum'),
+	
 	//passiveIncomeSum = document.querySelectorAll ('.choose-sum'),
 
 
@@ -54,7 +54,7 @@ let startBtn = document.getElementById ('start'),
 
 	remainderValue = document.getElementById ('remainder'),
 	shortageValue = document.getElementById ('shortage-value'),
-	potentialIncomeValue = document.getElementById ('potential_income'),
+	potentialIncomeValue = document.getElementById ('potential-income'),
 
 	regex = /^\d*\.?\d*$/; 
 
@@ -68,58 +68,58 @@ elementsArray.forEach(function(elem) { //массив инпутов
         if(e.code == 'Enter' || e.code == 'Tab') { //переход между инпутами по Enter или по Tab
           e.preventDefault();
 		  console.log(`${this.value} - Значение получено из поля ${elem.id} `);
-
+		
 		//текстовые поля
 		  if (elem.id == 'input-2' || elem.id == 'input-4' || elem.id == 'input-6' || elem.id == 'input-8' || elem.id == 'input-10' || elem.id == 'input-12' || elem.id == 'input-15'|| elem.id == 'input-16' || elem.id == 'input-18') {
 			document.getElementById(this.dataset.exp).focus();
 			document.getElementById(this.dataset.exp).select();
 			
-		} else if (elem.id == 'budget_input') { //поле бюджет на месяц
-				while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){ //проверка корректно ли введена сумма бюджета
-				alert ("Введите число без дополнительных символов");
-				return;	
-		  		}
-				console.log('enter pushed');
-		  	appData.budget = this.value;
-			document.getElementById(this.dataset.exp).focus();
-			document.getElementById(this.dataset.exp).select();
-			appData.detectDayBudget();
-			appData.detectLevel();
+		// } else if (elem.id == 'budget_input') { //поле бюджет на месяц
+		// 		while (this.value == "" || this.value == null || this.value > 1000000000 || !regex.test(this.value)){ //проверка корректно ли введена сумма бюджета
+		// 		alert ("Введите число без дополнительных символов");
+		// 		return;	
+		//   		}
+				//console.log('enter pushed');
+		  	//appData.budget = this.value;
+			// document.getElementById(this.dataset.exp).focus();
+			// document.getElementById(this.dataset.exp).select();
+			// appData.detectDayBudget();
+			// appData.detectLevel();
 
-        } else if (elem.id == 'input-3' || elem.id == 'input-5' || elem.id == 'input-7') { //поля сумм обязательных расходов
-				while (this.value > 1000000000 || !regex.test(this.value)){ //проверка корректно ли введена сумма обязательных расходов
+        } else if (elem.id == 'budget_input' || elem.id == 'input-3' || elem.id == 'input-5' || elem.id == 'input-7' || elem.id == 'input-9' || elem.id == 'input-11' || elem.id == 'input-13' || elem.id == 'input-17' || elem.id == 'input-19') { //поля сумм обязательных расходов
+				while (this.value > 1000000000 || !regex.test(this.value)){ //проверка корректно ли заполнены поля с суммами
 				alert ("Введите число без дополнительных символов");
 				return;
 		  		}
-		  appData.expenses += Number(this.value);
-		  console.log(`${appData.expenses} - Текущая сумма обязательных расходов`);
-		  appData.detectMandatoryExpSum();
+		//   appData.expenses += Number(this.value);
+		//   console.log(`${appData.expenses} - Текущая сумма обязательных расходов`);
+		//   appData.detectMandatoryExpSum();
 		  document.getElementById(this.dataset.exp).focus();
 		  document.getElementById(this.dataset.exp).select();
 		 
 
-		} else if (elem.id == 'input-9' || elem.id == 'input-11') {//поля сумм необязательных расходов 
-				while (this.value > 1000000000 || !regex.test(this.value)){ //проверка корректно ли введена сумма необязательных расходов	
-				alert ("Введите число без дополнительных символов");
-				return;
-				}
-			appData.optionalExpenses += Number(this.value);
-			console.log(`${appData.optionalExpenses} - Текущая сумма необязательных расходов`);
-			appData.detectOptExpSum();
-			document.getElementById(this.dataset.exp).focus();
-		  	document.getElementById(this.dataset.exp).select();
+		// } else if (elem.id == 'input-9' || elem.id == 'input-11') {//поля сумм необязательных расходов 
+		// 		while (this.value > 1000000000 || !regex.test(this.value)){ //проверка корректно ли введена сумма необязательных расходов	
+		// 		alert ("Введите число без дополнительных символов");
+		// 		return;
+		// 		}
+		// 	// appData.optionalExpenses += Number(this.value);
+		// 	// console.log(`${appData.optionalExpenses} - Текущая сумма необязательных расходов`);
+		// 	// appData.detectOptExpSum();
+		// 	document.getElementById(this.dataset.exp).focus();
+		//   	document.getElementById(this.dataset.exp).select();
 			
-		} else if (elem.id == 'input-13') { //поле сумма накоплений
-			while (this.value > 1000000000 || this.value == 0 || !regex.test(this.value)){ //проверка корректно ли введена сумма накоплений
-				alert ("Введите число >0 без дополнительных символов");
-				return;
-			}
-				appData.passiveIncome =  Number(this.value);
-				console.log(`${appData.passiveIncome} - сумма накоплений`)
-				document.getElementById(this.dataset.exp).focus();
-				document.getElementById(this.dataset.exp).select();
+		// } else if (elem.id == 'input-13') { //поле сумма накоплений
+		// 	while (this.value > 1000000000 || this.value == 0 || !regex.test(this.value)){ //проверка корректно ли введена сумма накоплений
+		// 		alert ("Введите число >0 без дополнительных символов");
+		// 		return;
+		// 	}
+		// 		// appData.passiveIncome =  Number(this.value);
+		// 		// console.log(`${appData.passiveIncome} - сумма накоплений`)
+		// 		document.getElementById(this.dataset.exp).focus();
+		// 		document.getElementById(this.dataset.exp).select();
 			
-					// if (elem.id == 'input-14') {
+		// 			// if (elem.id == 'input-14') {
 					// 	while (this.value == "" || this.value == null || !regex.test(this.value)) {
 					// 		alert ("Введите число без дополнительных символов");
 					// 	}
@@ -148,22 +148,22 @@ elementsArray.forEach(function(elem) { //массив инпутов
 					alert ("введите число от 0 до 100");
 					return;
 				}
-			appData.percentIncome =  Number(this.value);
-			let calculations = appData.passiveIncome*Number(this.value)/100/12;//расчет накоплений за месяц
-			monthSavingsValue.textContent = calculations.toFixed();
+			//appData.percentIncome =  Number(this.value);
+			// let calculations = appData.passiveIncome*Number(this.value)/100/12;//расчет накоплений за месяц
+			// monthSavingsValue.textContent = calculations.toFixed();
 			document.getElementById(this.dataset.exp).focus();
 			document.getElementById(this.dataset.exp).select();
 
-		} else if (elem.id == 'input-17' || elem.id == 'input-19') { //поля дополнительного дохода
-				while (this.value > 10000000 || !regex.test(this.value)){ //проверка корректно ли введены суммы дополнительного дохода	
-				alert ("Введите число без дополнительных символов");
-				return;
-				}
-			appData.additionalIncome += Number(this.value);
-			console.log(`${appData.additionalIncome} - Текущая сумма дополнительных доходов`);
-			appData.detectIncome();
-			document.getElementById(this.dataset.exp).focus();
-		  	document.getElementById(this.dataset.exp).select();
+		// } else if (elem.id == 'input-17' || elem.id == 'input-19') { //поля дополнительного дохода
+		// 		while (this.value > 10000000 || !regex.test(this.value)){ //проверка корректно ли введены суммы дополнительного дохода	
+		// 		alert ("Введите число без дополнительных символов");
+		// 		return;
+		// 		}
+// 	appData.additionalIncome += Number(this.value);
+// 			console.log(`${appData.additionalIncome} - Текущая сумма дополнительных доходов`);
+// 			appData.detectIncome();
+// 			document.getElementById(this.dataset.exp).focus();
+// 		  	document.getElementById(this.dataset.exp).select();
 		}
 }
     });
@@ -173,74 +173,35 @@ elementsArray.forEach(function(elem) { //массив инпутов
 calcButton.addEventListener ('click', function (e) { //действия по кнопке Рассчитать Бюджет
 	e.preventDefault;
 	appData.budget = budgetEnter.value; //добавляем бюджет в массив
-	appData.detectDayBudget();
-	appData.detectLevel();
+	appData.detectDayBudget();//определяем дневной бюджет
+	appData.detectLevel(); //определяем уровень достатка
 
-	appData.expenses = 0; //обнуляем и перезаписываем обязательные расходы
-	expensesSum.forEach(function(elem) {
+	expensesSum.forEach(function(elem) { //обязательные расходы
 		appData.expenses += Number(elem.value);
+		appData.detectMandatoryExpSum();
 		console.log(`${appData.expenses} - проверка цикла forEach expenses`);
 	});
 
-	appData.optionalExpenses = 0; //обнуляем и перезаписываем необязательные расходы
-	optionalExpensesSum.forEach(function (elem) {
+	optionalExpensesSum.forEach(function (elem) { //возможные траты
 		appData.optionalExpenses += Number(elem.value);
+		appData.detectOptExpSum();
 		console.log(`${appData.optionalExpenses} - проверка цикла forEach optionalExpenses`);
 	});
 
-	passiveIncome = 0; //обнуляем и перезаписываем сумму накоплений
-	savingsSum = Number(appData.passiveIncome.value);
-	console.log(`${appData.passiveIncome} - проверка что введено в сумму накоплений`);
+	appData.savingsAmount = Number(savingsInputSum.value);
+	appData.percentIncome = Number(savingsInputPercent.value);
+	appData.passiveIncome = appData.savingsAmount*appData.percentIncome/100/12;//расчет накоплений за месяц
+	monthSavingsValue.textContent = appData.passiveIncome.toFixed(2);
+	console.log(`${appData.savingsAmount} - проверка что введено в сумму накоплений`);
 	
-	appData.budgetCalc();
+	additionalIncomeSum.forEach(function (elem) { //дополнительные доходы
+		appData.additionalIncome += Number(elem.value);
+		appData.detectIncome();
+		console.log(`${appData.additionalIncome} - Текущая сумма дополнительных доходов`);
+	});
 
+	appData.budgetCalc(); //расчет остатка и процентов на остаток
 });
-
-
-//startBtn.addEventListener('click', function() {
-	//startBtn.style.transition = 'animation ease-out 2s';
-	//startBtn.style.animation = 'none';
-
-
-// function getNumberFromBudgetTextField() {
-// 	budgetEnter.addEventListener('keydown', function(e) {
-// 		if(e.code == 'Enter') {
-// 			console.log(`${this.value} - Значение получено из поля "ваш бюджет на месяц" `);
-// 			appData.budget = this.value;
-// 			let regex = /^\d*\.?\d*$/;
-// 				while (appData.budget == "" || appData.budget == null || appData.budget > 1000000000 || !regex.test(appData.budget)){
-// 					alert ("Введите число без дополнительных символов");
-// 					return;//проверка корректно ли введена сумма дохода
-// 				}
-				
-// 			appData.detectDayBudget();
-// 			appData.detectLevel();
-// 		}
-// 	});
-// }
-// getNumberFromBudgetTextField();
-
-
-
-//	money = budgetEnter.value;
-//console.log(money);
-	//+prompt("Ваш бюджет на месяц?", ''); //получаем от пользователя его бюджет на месяц (размер доходов)
-
-	
-	// appData.budget = money; //полученные от пользователя данные записываем в объект appData
-	// budgetValue.textContent = money.toFixed(); //полученные от пользователя данные записываем в созданный div budgetValue
-	//appData.detectDayBudget();
-	// dayBudgetValue.textContent = appData.moneyPerDay;
-	// appData.detectLevel();
-	// appData.chooseExpenses();
-	//appData.chooseOptExpenses();
-	//appData.checkSavings();
-	//appData.chooseIncome();
-
-	//inputYear.value = new Date(Date.parse(time)).getFullYear();
-	//inputMonth.value = new Date(Date.parse(time)).getMonth() + 1;
-	//inputDay.value = new Date(Date.parse(time)).getDate();
-
 
 /* объект с данными*/
 let appData = {
@@ -248,8 +209,9 @@ let appData = {
 	expenses: 0.0,
 	optionalExpenses: 0.0,
 	savings: true,
-	passiveIncome: 0.0,
+	savingsAmount: 0.0,
 	percentIncome: 0.0,
+	passiveIncome: 0.0,
 	additionalIncome: 0.0,
 	remainder: 0.0,
 	potentialIncome: 0.0,
@@ -274,7 +236,7 @@ let appData = {
 			}
 	},
 
-	detectMandatoryExpSum: function() { //записываем полученные от пользователя данные сумм обязательных расходов в массив appData
+	detectMandatoryExpSum: function() { //записываем полученные от пользователя данные сумм обязательных расходов 
 		expenseslValue.textContent = appData.expenses;
 	},
 
@@ -332,13 +294,18 @@ let appData = {
 	},
 
 	budgetCalc: function (){ //считаем остаток или дефицит
-		remainder = appData.budget - (appData.expenses + appData.optionalExpenses) + (appData.passiveIncome + appData.additionalIncome);
-		console.log(`${remainder} - значение переменной remainder`);
+		remainderPercentCalculation();
+	},
+};
+
+function remainderPercentCalculation() {
 		console.log(`${appData.budget} - значение budget`);
-		console.log(`${appData.expenses} - значение expenses, ${appData.optionalExpenses} -  значение Optional expenses`);
+		console.log(`${appData.expenses} - значение expenses, ${appData.optionalExpenses} -  значение Optional expenses, ${appData.savingsAmount} -  значение passiveIncome, ${appData.additionalIncome} -  значение additionalIncome`);
+	remainder = (appData.budget - appData.expenses - appData.optionalExpenses + appData.passiveIncome + appData.additionalIncome).toFixed(2);
+		console.log(`${remainder} - значение переменной remainder`);
 		if (remainder >= 0) { //если >= 0, записываем в поле Остаток
 			remainderValue.textContent = remainder; 
-			potentialIncome = (remainder * 0.07 / 12).toFixed(2);
+			potentialIncome = (remainder * 0.07 / 12).toFixed(2);//рассчитываем проценты на остаток
 			if (potentialIncome == 0) {
 				potentialIncomeValue.textContent = '0';
 				return;
@@ -351,8 +318,7 @@ let appData = {
 			potentialIncomeValue.textContent = '0';
 			//shortageValue.classList.add('negative');
 		}
-	},
-};
+}
 
 checkbox.forEach(function(elem) { //массив с чекбоксами
 	elem.addEventListener('change', function() {
