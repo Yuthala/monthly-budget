@@ -4,7 +4,6 @@
 //заменить nested if на другую проверку (если оба поля "Сумма" и "процент" имеют валидные значения, только тогда производятся вычисления)
 //секция "Рассчитать бюджет" = по кнопке расчет трех полей. Если остаток, цифра зеленая. Если дефицит - красная без минуса, потенциальный доход зеленый, если получился дефицит - серый ноль.
 //сделать другой цвет для текста в полях вывода: доходы, накопления - зеленые, расходы - оранжевые, бюджет на день и уровень дохода - серые
-//добавить кнопку "обновить расчет" - по кнопке Новый Расчет всем значениям присваеивается 0, очистить справочные поля справа (поля заполнить nu)
 //рефактор кода
 
 
@@ -51,6 +50,7 @@ let startBtn = document.getElementById ('start'),
 	//chooseIncome4 = document.querySelectorAll('.choose-income')[3],
 	checkbox = document.querySelectorAll('.ckeckbox'),
 	calcButton = document.getElementById ('calc'),
+	newCalcButton = document.getElementById ('new-calc'),
 
 	remainderValue = document.getElementById ('remainder'),
 	shortageValue = document.getElementById ('shortage-value'),
@@ -203,6 +203,11 @@ calcButton.addEventListener ('click', function (e) { //действия по к�
 	appData.budgetCalc(); //расчет остатка и процентов на остаток
 });
 
+
+newCalcButton.addEventListener ('click', function (e) { //действия по кнопке Обновить расчет
+	window.location.reload();
+});
+
 /* объект с данными*/
 let appData = {
 	budget: 0.0,
@@ -305,9 +310,12 @@ function remainderPercentCalculation() {
 		console.log(`${remainder} - значение переменной remainder`);
 		if (remainder >= 0) { //если >= 0, записываем в поле Остаток
 			remainderValue.textContent = remainder; 
+			remainderValue.classList.add('plus');
 			potentialIncome = (remainder * 0.07 / 12).toFixed(2);//рассчитываем проценты на остаток
 			if (potentialIncome == 0) {
 				potentialIncomeValue.textContent = '0';
+				potentialIncomeValue.classList.add('inactive');
+				remainderValue.classList.add('inactive');
 				return;
 			}
 			console.log(`${potentialIncome} - значение потенциального дохода за 1 мес при наличии остатка`);
@@ -316,7 +324,8 @@ function remainderPercentCalculation() {
 		} else { //если <0, записываем модуль в поле Дефицит
 			shortageValue.textContent = Math.abs(remainder);
 			potentialIncomeValue.textContent = '0';
-			//shortageValue.classList.add('negative');
+			shortageValue.classList.add('negative');
+			potentialIncomeValue.classList.add('inactive');
 		}
 }
 
