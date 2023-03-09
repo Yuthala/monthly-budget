@@ -1,10 +1,4 @@
 
-//TO DO: 
-//-разделы: переменные, объекты, функции
-//-добавить Read Me на Github (примененные технологии ##, для чего это приложение #, как пользоваться с картинками)
-
-
-
 let budgetEnter = document.getElementById ('budget_input'),
 	budgetValue = document.getElementsByClassName('budget-value')[0],
 	dayBudgetValue = document.getElementsByClassName('daybudget-value')[0],
