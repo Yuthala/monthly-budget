@@ -25,4 +25,7 @@ Use Enter or Tab to move by input fields. You can also use click necessary field
 <img width="403" alt="Screenshot 2023-03-09 at 15 12 54" src="https://user-images.githubusercontent.com/113363158/224019873-7dc99da3-e2d5-4016-ab61-530cadee4066.png">
 6. Resulting table below indicates if your monthly budget is positive (and you have some remainder) or negative. If you've got a remainder you can see what is your potential income if you invest the remainder at 'conditionally zero-risk' rate, which is currently 7% for Russian Rouble.
 <img width="394" alt="Screenshot 2023-03-09 at 15 16 08" src="https://user-images.githubusercontent.com/113363158/224021215-a87eff54-60e0-45d8-ba60-829362a5e562.png">
-7. To start new calculation press "Обновить расчет" button.
+
+7. To start new calculation press "Обновить расчет" button and repeat all the steps.
+
+Hope you enjoy using this tool!
