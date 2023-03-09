@@ -6,7 +6,7 @@ High-level monthly personal/family budget calculation with indication what is yo
 This is a study project to practice basic JavaScript functions and methods - cycles, conditions, dataset, array methods, number methods, RegExp, keyboard and mouse events. User amount entry fields are being validated, text fields don't. 'Focus' and 'select' methods allow to auto-select next field by pressing Eneter or Tab key. Mouse-click can be used to select any field and buttons.
 No libraries used.
 
-Styles include CSS variables for colors and CSS mixins for input fields and buttons. Savings and additional income fields become active or inactive (by adding classes dynamically) depending on checkbox status. SASS is used as a CSS preprocessor.
+Styles include CSS variables for colors and CSS mixins for input fields and buttons. Savings and additional income fields become active or inactive (by adding classes dynamically) depending on checkbox status. SASS is used as a CSS preprocessor. Imported font Poppins.
 
 ## How to use?
 There are no mandatory fields but the final output depends on how accurate your entries are!
