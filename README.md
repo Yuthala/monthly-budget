@@ -1,5 +1,5 @@
 # Money Keeper
-HTML + CSS + SASS + vanilla JavaScript
+HTML + CSS + SASS + JavaScript
 
 High-level monthly personal/family budget calculation with indication what is your potential additional income in case you invest a remainder at 'conditionally zero-risk' interest rate.
 
